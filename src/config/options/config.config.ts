@@ -8,6 +8,7 @@ export class ConfigModuleConfig
     const env = process.env.NODE_ENV;
 
     return {
+      dir: 'config',
       fileName: !env ? '.env.development' : `.env.${env}`,
       useProcess: false,
     };
