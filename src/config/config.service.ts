@@ -15,7 +15,7 @@ export class ConfigService {
   private envConfig: EnvironmentVariables;
 
   constructor(@Inject(CONFIG_MODULE_OPTIONS) options: ConfigModuleOptions) {
-    const { fileName, useProcess } = options;
+    const { dir, fileName, useProcess } = options;
 
     if (!fileName && !useProcess) {
       throw new Error(
@@ -29,7 +29,9 @@ export class ConfigService {
     if (!useProcess && fileName) {
       // * get working directory
       process.env.PWD = process.env.PWD ? process.env.PWD : process.cwd();
-      config = parse(readFileSync(join(process.env.PWD, options.fileName)));
+      config = parse(
+        readFileSync(join(process.env.PWD, dir, options.fileName)),
+      );
     } else {
       config = process.env;
     }
