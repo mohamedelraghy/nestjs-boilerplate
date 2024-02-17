@@ -11,6 +11,13 @@ export interface ConfigModuleOptions {
   fileName: string;
 
   /**
+   * @default config
+   * @example config
+   * Name of the folder containing env files.
+   */
+  dir: string;
+
+  /**
    * Decide wether to obtain config from use process.env or a file.
    * @default false
    */
