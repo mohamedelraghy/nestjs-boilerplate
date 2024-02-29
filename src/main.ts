@@ -10,7 +10,7 @@ async function bootstrap() {
 
   const port = process.env.PORT || config.port || 3000;
   await app.listen(port, () => {
-    Logger.verbose(`🚀 Server listening on prot:${port} at ${config.nodeEnv}`);
+    Logger.verbose(`🚀 Server listening on PORT:${port} at ${config.nodeEnv}`);
   });
 }
 
