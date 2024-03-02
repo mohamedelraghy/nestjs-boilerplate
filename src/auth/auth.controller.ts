@@ -3,14 +3,16 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  InternalServerErrorException,
   Post,
-  Request,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { Request } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -19,21 +21,33 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  async signIn(@Request() req) {
-    const token = await this.authService.signIn(req.user);
-    req.session.jwt = token.access_token;
-    return token;
+  async signIn(@Req() req) {
+    this.addJwtToCookie(req);
+    return { token: req.session.jwt };
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  getProfile(@Request() req) {
+  getProfile(@Req() req) {
     return req.user;
   }
 
   @Get('logout')
-  logOut(@Request() req) {
+  logOut(@Req() req) {
     req.session = null;
     return;
+  }
+
+  private addJwtToCookie(req: Request) {
+    try {
+      req.session.jwt = this.authService.generateJwtToken(
+        req.user,
+      ).access_token;
+    } catch (err) {
+      throw new InternalServerErrorException(
+        err,
+        'Problem with cookie-session middleware?',
+      );
+    }
   }
 }
