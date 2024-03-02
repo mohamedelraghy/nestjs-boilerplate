@@ -19,13 +19,21 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  signIn(@Request() req) {
-    return this.authService.signIn(req.user);
+  async signIn(@Request() req) {
+    const token = await this.authService.signIn(req.user);
+    req.session.jwt = token.access_token;
+    return token;
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   getProfile(@Request() req) {
     return req.user;
+  }
+
+  @Get('logout')
+  logOut(@Request() req) {
+    req.session = null;
+    return;
   }
 }
