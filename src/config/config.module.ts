@@ -12,4 +12,9 @@ export class ConfigModule extends createConfigurableDynamicRootModule<
 >(CONFIG_MODULE_OPTIONS, {
   providers: [ConfigService],
   exports: [ConfigService],
-}) {}
+}) {
+  /**
+   * To prevent calling externallyConfigured every time, we create a static property to use instead.
+   */
+  static Deferred = ConfigModule.externallyConfigured(ConfigModule, 0);
+}
