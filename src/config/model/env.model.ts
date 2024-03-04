@@ -1,4 +1,4 @@
-import { IsEnum, IsIn, IsNumber, IsPositive } from 'class-validator';
+import { IsEnum, IsIn, IsNumber, IsPositive, IsString } from 'class-validator';
 
 enum Environment {
   Development = 'development',
@@ -15,4 +15,7 @@ export class EnvironmentVariables {
   @IsNumber()
   @IsPositive()
   PORT: number;
+
+  @IsString()
+  MONGO_URI: string;
 }
