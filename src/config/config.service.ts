@@ -66,4 +66,8 @@ export class ConfigService {
   get port(): number {
     return this.envConfig.PORT;
   }
+
+  get mongoUri(): string {
+    return this.envConfig.MONGO_URI;
+  }
 }
