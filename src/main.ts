@@ -16,7 +16,7 @@ async function bootstrap() {
 
   await app.listen(port, () => {
     Logger.verbose(
-      `🚀 Server listening on PORT:${port} | ${config.nodeEnv} | ${config.apiUrl}/api`,
+      `🚀 Server listening on PORT:${port} | ${config.nodeEnv} | ${config.apiUrl}`,
     );
   });
 }
