@@ -70,4 +70,16 @@ export class ConfigService {
   get mongoUri(): string {
     return this.envConfig.MONGO_URI;
   }
+
+  get rateLimit(): number {
+    return this.envConfig.RATE_LIMIT;
+  }
+
+  get globalPrefix(): string {
+    return this.envConfig.GLOBAL_PREFIX;
+  }
+
+  get apiUrl(): string {
+    return this.envConfig.API_URL;
+  }
 }
