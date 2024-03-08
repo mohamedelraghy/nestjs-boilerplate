@@ -18,4 +18,13 @@ export class EnvironmentVariables {
 
   @IsString()
   MONGO_URI: string;
+
+  @IsNumber()
+  RATE_LIMIT: number;
+
+  @IsString()
+  GLOBAL_PREFIX: string;
+
+  @IsString()
+  API_URL: string;
 }
