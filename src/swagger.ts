@@ -9,11 +9,9 @@ export function initSwagger(
 ): void {
   const options = new DocumentBuilder()
     .setTitle('nest boilerplate')
-    .setDescription(
-      '## 1. Getting started\n### 1.1 Download [Postman Collection](' +
-        config.apiUrl +
-        'api-json)\n',
-    )
+    .setDescription('nest boilerplate API documentation')
+    .setExternalDoc('Postman Collection', config.apiUrl + '-json')
+    .setVersion('1.0')
     .addBearerAuth()
     .build();
 
