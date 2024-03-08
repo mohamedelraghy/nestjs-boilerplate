@@ -12,7 +12,7 @@ import { SessionSerializer } from './serializer/session.serializer';
 @Module({
   imports: [
     UsersModule,
-    PassportModule.register({ session: true }),
+    PassportModule.register({ defaultStrategy: 'jwt', session: true }),
     JwtModule.register({
       global: true,
       secret: jwtConstants.secret,
