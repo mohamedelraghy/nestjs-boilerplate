@@ -49,7 +49,10 @@ export function configure(
   // Registers pipes as global pipes (will be used within every HTTP route handler)
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
 
-  app.enableCors();
+  app.enableCors({
+    credentials: true,
+    origin: '*',
+  });
 
   // Registers a prefix for every HTTP route path.
   app.setGlobalPrefix(config.globalPrefix);
