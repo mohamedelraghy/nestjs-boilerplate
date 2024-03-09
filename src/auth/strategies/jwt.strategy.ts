@@ -12,11 +12,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       ]),
       ignoreExpiration: false,
       secretOrKey: jwtConstants.secret,
-      passReqToCallback: true,
     });
   }
 
-  async validate(req: Request, payload: any) {
+  async validate(payload: any) {
     return { userId: payload.sub, username: payload.username };
   }
 }
