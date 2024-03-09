@@ -3,11 +3,11 @@ import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
 export class SignInDto {
   @IsEmail()
-  @ApiProperty({ example: 'super@admin.com' })
+  @ApiProperty({ example: 'john' })
   username: string;
 
   @IsNotEmpty()
   @IsString()
-  @ApiProperty({ example: 'P@ssw0rd' })
+  @ApiProperty({ example: 'changeme' })
   password: string;
 }
