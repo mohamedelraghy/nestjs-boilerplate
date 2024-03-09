@@ -6,13 +6,14 @@ import {
   InternalServerErrorException,
   Post,
   Req,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { SignInDto } from './dto/sign-in.dto';
 
@@ -25,8 +26,8 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @ApiBody({ type: SignInDto })
   @Post('login')
-  async signIn(@Req() req) {
-    this.addJwtToCookie(req);
+  async signIn(@Req() req, @Res({ passthrough: true }) res) {
+    this.addJwtToCookie(req, res);
     return { token: req.session.jwt };
   }
 
@@ -37,16 +38,16 @@ export class AuthController {
   }
 
   @Get('logout')
-  logOut(@Req() req) {
+  logOut(@Req() req, @Res({ passthrough: true }) res: Response) {
     req.session = null;
-    return;
+    res.clearCookie('jwt');
   }
 
-  private addJwtToCookie(req: Request) {
+  private addJwtToCookie(req: Request, res: Response) {
     try {
-      req.session.jwt = this.authService.generateJwtToken(
-        req.user,
-      ).access_token;
+      const token = this.authService.generateJwtToken(req.user).access_token;
+      req.session.jwt = token;
+      res.cookie('jwt', token, { httpOnly: true });
     } catch (err) {
       throw new InternalServerErrorException(
         err,

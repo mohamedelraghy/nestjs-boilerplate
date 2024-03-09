@@ -11,8 +11,8 @@ export function initSwagger(
     .setTitle('nest boilerplate')
     .setDescription('nest boilerplate API documentation')
     .setExternalDoc('Postman Collection', config.apiUrl + '-json')
-    .setVersion('1.0')
     .addBearerAuth()
+    .setVersion('1.0')
     .build();
 
   const document = SwaggerModule.createDocument(app, options);

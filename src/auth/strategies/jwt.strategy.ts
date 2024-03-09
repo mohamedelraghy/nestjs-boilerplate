@@ -12,15 +12,16 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       ]),
       ignoreExpiration: false,
       secretOrKey: jwtConstants.secret,
+      passReqToCallback: true,
     });
   }
 
-  async validate(payload: any) {
+  async validate(req: Request, payload: any) {
     return { userId: payload.sub, username: payload.username };
   }
 }
 
 export function extractJwtFromCookie(req: Request): string {
-  console.log('jwt -> ', req?.session?.jwt || null);
-  return req?.session?.jwt || null;
+  console.log('jwt -> ', req?.session?.jwt || req?.cookies?.jwt || null);
+  return req?.session?.jwt || req?.cookies?.jwt || null;
 }
