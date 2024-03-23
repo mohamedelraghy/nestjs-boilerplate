@@ -20,3 +20,13 @@ export function toPipelineStage(
 
   return filter;
 }
+
+export function arrayToProjection(
+  attributes: string[],
+): Record<string, number> {
+  const specifications = {};
+  for (const attr of attributes) {
+    specifications[attr] = 1;
+  }
+  return specifications;
+}
