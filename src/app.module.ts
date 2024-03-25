@@ -7,6 +7,7 @@ import { UsersModule } from './users/users.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MongooseModuleConfig } from './config/options/database.config';
 import { UploadsModule } from './uploads/uploads.module';
+import { CoreModule } from './core/core.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { UploadsModule } from './uploads/uploads.module';
       useClass: MongooseModuleConfig,
       imports: [ConfigModule.Deferred],
     }),
+    CoreModule,
     AuthModule,
     UsersModule,
     UploadsModule,
