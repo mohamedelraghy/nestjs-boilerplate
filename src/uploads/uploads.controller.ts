@@ -1,6 +1,5 @@
 import {
   Controller,
-  FileTypeValidator,
   MaxFileSizeValidator,
   ParseFilePipe,
   Post,
@@ -11,8 +10,10 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express';
 
 import { UploadsService } from './uploads.service';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('uploads')
+@ApiTags('uploads')
 export class UploadsController {
   constructor(private readonly uploadService: UploadsService) {}
   @Post('upload')
@@ -22,7 +23,7 @@ export class UploadsController {
       new ParseFilePipe({
         validators: [
           new MaxFileSizeValidator({ maxSize: 5 * 1024 * 1024 }),
-          new FileTypeValidator({ fileType: 'image/jpeg' }),
+          // new FileTypeValidator({ fileType: 'image/jpeg' }),
         ],
       }),
     )
