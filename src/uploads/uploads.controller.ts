@@ -1,5 +1,7 @@
 import {
   Controller,
+  HttpCode,
+  HttpStatus,
   MaxFileSizeValidator,
   ParseFilePipe,
   Post,
@@ -10,12 +12,26 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express';
 
 import { UploadsService } from './uploads.service';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 
 @Controller('uploads')
 @ApiTags('uploads')
 export class UploadsController {
   constructor(private readonly uploadService: UploadsService) {}
+
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @HttpCode(HttpStatus.OK)
+  @ApiConsumes('multipart/form-data')
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
   uploadFile(
