@@ -1,4 +1,5 @@
 import { Types } from 'mongoose';
+import * as bcrypt from 'bcryptjs';
 
 export type ObjectId = Types.ObjectId;
 
@@ -29,4 +30,8 @@ export function arrayToProjection(
     specifications[attr] = 1;
   }
   return specifications;
+}
+
+export function toHash(value: string, rounds = 10): string {
+  return value ? bcrypt.hashSync(value, rounds) : value;
 }
