@@ -1,12 +1,11 @@
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { ValidationPipe } from '@nestjs/common';
-import { NextFunction, Request, Response } from 'express';
 import * as cookieParser from 'cookie-parser';
 import * as compression from 'compression';
 import { rateLimit } from 'express-rate-limit';
-import { v4 as uuidv4 } from 'uuid';
 import helmet from 'helmet';
-import cookieSession = require('cookie-session');
+import * as session from 'express-session';
+import * as passport from 'passport';
 import { join } from 'path';
 
 import { ConfigService } from './config/config.service';
@@ -27,13 +26,16 @@ export function configure(
     // Parse Cookie header and populate req.cookies with an object keyed by the cookie names
     cookieParser(),
     // Simple cookie-based session middleware
-    cookieSession({
-      name: 'session',
-      keys: ['secret'],
-      maxAge: 24 * 60 * 60 * 1000, // 24 hours
-      sameSite: 'none',
-      secure: false,
+    session({
+      saveUninitialized: false,
+      secret: 'sup3rs3cr3t',
+      resave: false,
+      cookie: { sameSite: true, httpOnly: false, maxAge: 1000 * 60 * 60 },
     }),
+
+    passport.initialize(),
+
+    passport.session(),
 
     // Basic rate-limiting middleware for Express
     rateLimit({
@@ -43,10 +45,10 @@ export function configure(
     }),
 
     // https://github.com/goldbergyoni/nodebestpractices/blob/49da9e5e41bd4617856a6ecd847da5b9c299852e/sections/production/assigntransactionid.md
-    (req: Request, res: Response, next: NextFunction) => {
-      req.session.id = req?.session?.id ?? uuidv4();
-      next();
-    },
+    // (req: Request, res: Response, next: NextFunction) => {
+    //   req.session.id = req?.session?.id ?? uuidv4();
+    //   next();
+    // },
   );
 
   // Registers pipes as global pipes (will be used within every HTTP route handler)

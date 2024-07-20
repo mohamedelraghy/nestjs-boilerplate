@@ -8,6 +8,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { MongooseModuleConfig } from './config/options/database.config';
 import { UploadsModule } from './uploads/uploads.module';
 import { CoreModule } from './core/core.module';
+import { CacheModule } from '@nestjs/cache-manager';
+import { CacheModuleOptions } from './config/options/cache.config';
 
 @Module({
   imports: [
@@ -20,6 +22,7 @@ import { CoreModule } from './core/core.module';
     AuthModule,
     UsersModule,
     UploadsModule,
+    CacheModule.registerAsync({ useClass: CacheModuleOptions }),
   ],
 })
 export class AppModule {}
