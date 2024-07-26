@@ -34,13 +34,27 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   getProfile(@Req() req) {
+    console.log({ req });
     return req.user;
   }
 
   @Get('logout')
-  logOut(@Req() req, @Res({ passthrough: true }) res: Response) {
-    req.session = null;
-    res.clearCookie('jwt');
+  logOut(@Req() req, @Res() res: Response) {
+    req.logout((err) => {
+      if (err)
+        return res.status(500).json({ message: 'Logout failed', error: err });
+
+      req.session.destroy((err) => {
+        if (err) {
+          return res
+            .status(500)
+            .json({ message: 'Failed to destroy session', error: err });
+        }
+
+        res.clearCookie('jwt'); // Replace 'jwt' with your session cookie name if different
+        res.status(200).json({ message: 'Logged out successfully' });
+      });
+    });
   }
 
   private addJwtToCookie(req: Request, res: Response) {

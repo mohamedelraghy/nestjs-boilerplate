@@ -22,7 +22,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
     const { url, method } = request;
-    const requestId = request.session.id;
+    const requestId = request?.session?.id || 'unknown';
     const timestamp = new Date().toDateString();
 
     // Catch HttpExceptions

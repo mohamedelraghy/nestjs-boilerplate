@@ -4,9 +4,11 @@ import * as cookieParser from 'cookie-parser';
 import * as compression from 'compression';
 import { rateLimit } from 'express-rate-limit';
 import helmet from 'helmet';
-import * as session from 'express-session';
 import * as passport from 'passport';
 import { join } from 'path';
+import * as session from 'express-session';
+import RedisStore, * as redisStore from 'connect-redis';
+import { createClient } from 'redis';
 
 import { ConfigService } from './config/config.service';
 import { initSwagger } from './swagger';
@@ -15,6 +17,17 @@ export function configure(
   app: NestExpressApplication,
   config: ConfigService,
 ): void {
+  // Create Redis client
+  const redisClient = createClient({
+    url: 'redis://localhost:6379',
+  });
+
+  redisClient.connect();
+
+  redisClient.on('error', (err) => {
+    console.error('Redis error:', err);
+  });
+
   app.useStaticAssets(join(__dirname, '..', 'upload'));
 
   app.set('trust proxy', 1); // trust first proxy
@@ -27,10 +40,15 @@ export function configure(
     cookieParser(),
     // Simple cookie-based session middleware
     session({
-      saveUninitialized: false,
-      secret: 'sup3rs3cr3t',
+      store: new RedisStore({ client: redisClient }),
+      secret: 'your-secret-key', // Replace with your secret key
       resave: false,
-      cookie: { sameSite: true, httpOnly: false, maxAge: 1000 * 60 * 60 },
+      saveUninitialized: false,
+      cookie: {
+        secure: config.isProd, // Only use secure cookies in production
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      },
     }),
 
     passport.initialize(),
